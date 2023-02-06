@@ -1,0 +1,5 @@
+pandas
+'shillelagh'
+'shillelagh[all]'
+altair
+vega_datasets
