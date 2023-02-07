@@ -131,7 +131,7 @@ with bp_tab:
         text = alt.Chart(x_dea).mark_text(
             align='left',
             baseline='middle',
-            dx=5,
+            dx=-70,
             dy=-110,
             size=11
         ).encode(
