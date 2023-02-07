@@ -116,15 +116,30 @@ with bp_tab:
     )
 
     # add a line for the day the x dea requirement was removed if the selected date range includes that date
+    x_dea = pd.DataFrame({
+        'Month, Year': [X_DATE],
+        'text':['XDEA requirement removed'],
+    })
     if (q_end > datetime.strptime(X_DATE, '%Y-%m-%d').date()):
-        rules = alt.Chart(pd.DataFrame({
-            'Month, Year of Filled At': [X_DATE],
-            'color':['white'],
-        })).mark_rule().encode(
-            x='Month, Year of Filled At:T',
-            color=alt.Color('color:N', scale=None)
+        rules = alt.Chart(x_dea).mark_rule(
+            color='white',
+            strokeWidth=1,
+            strokeDash=[1,1]
+        ).encode(
+            x='Month, Year:T'
         )
-        chart = bp_line + rules
+        text = alt.Chart(x_dea).mark_text(
+            align='left',
+            baseline='middle',
+            dx=5,
+            dy=-110,
+            size=11
+        ).encode(
+            x='Month, Year:T',
+            text='text',
+            color=alt.value('white')
+        )
+        chart = bp_line + rules + text
     else:
         chart = bp_line
 
