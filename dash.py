@@ -120,7 +120,7 @@ with bp_tab:
         'Month, Year': [X_DATE],
         'text':['XDEA requirement removed'],
     })
-    if (q_end > datetime.strptime(X_DATE, '%Y-%m-%d').date()):
+    if (q_end > datetime.strptime(X_DATE, '%Y-%m-%d').date() and q_start < datetime.strptime(X_DATE, '%Y-%m-%d').date()):
         rules = alt.Chart(x_dea).mark_rule(
             color='white',
             strokeWidth=1,
