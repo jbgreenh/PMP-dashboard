@@ -148,7 +148,9 @@ with bp_tab:
         )
     )
 
+    # format dataframe for display and downloading
     bp.drop(columns='Month, Year', inplace=True)
+    bp['Month, Year of Filled At'] = bp['Month, Year of Filled At'].astype('datetime64[ns]').dt.strftime('%Y-%m')
 
     # ------------
     # page layout
