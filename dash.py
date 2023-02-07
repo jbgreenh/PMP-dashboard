@@ -124,7 +124,7 @@ with bp_tab:
         rules = alt.Chart(x_dea).mark_rule(
             color='white',
             strokeWidth=1,
-            strokeDash=[1,1]
+            strokeDash=[3,6]
         ).encode(
             x='Month, Year:T'
         )
