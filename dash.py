@@ -82,19 +82,20 @@ with st.sidebar:
             )      
 
 # handle the date_range input
-q_start = date_range[0]
+q_start = date_range[0].replace(day=1)
 try:
-    q_end = date_range[1]
+    q_end = date_range[1].replace(day=1)
 except:
-    q_end = date_range[0]
+    q_end = date_range[0].replace(day=1)
 
 with bp_tab:
     # filter the data using user selections from the sidebar
-    bp = bp[(bp['Month, Year of Filled At'] > q_start) & (bp['Month, Year of Filled At'] < q_end)]
+    bp['Month, Year'] = bp['Month, Year of Filled At'] + pd.Timedelta(days=1) # this is a bit hacky, should really set timezone to fix tooltip display in altair 
+    bp = bp[(bp['Month, Year of Filled At'] >= q_start) & (bp['Month, Year of Filled At'] <= q_end)]
     bp = bp[bp['Current Pharmacy County'].str.title().isin(counties)]
     bp.rename(columns={'Current Pharmacy County':'Pharmacy County'}, inplace=True)
-    
-    bp_for_line = bp.groupby(['Month, Year of Filled At', 'Generic Name'])['Prescription Count'].sum().reset_index()
+
+    bp_for_line = bp.groupby(['Month, Year', 'Generic Name'])['Prescription Count'].sum().reset_index()
 
     bp_for_map = bp.copy()
     bp_for_map['Pharmacy County'] = bp_for_map['Pharmacy County'].str.title()
@@ -104,12 +105,12 @@ with bp_tab:
     # line chart with mouseover interaction
     brush = alt.selection_single(on='mouseover', nearest=True)
     bp_line = alt.Chart(bp_for_line).mark_line().encode(
-        alt.X('Month, Year of Filled At', axis=alt.Axis(format='%Y %B', title='date')),
+        alt.X('Month, Year', axis=alt.Axis(format='%Y %B', title='date')),
         alt.Y('Prescription Count', axis=alt.Axis(title='rx count')),
         color=alt.Color('Generic Name', scale=alt.Scale(scheme='accent'), legend=alt.Legend(title=' ', orient='top')), # title is space to prevent an altair bug that causes clipping
         strokeDash='Generic Name',
         strokeWidth=alt.value(3),
-        tooltip=['Generic Name', 'Month, Year of Filled At', 'Prescription Count']
+        tooltip=['Generic Name', 'Month, Year', 'Prescription Count']
     ).add_selection(
         brush
     )
@@ -146,6 +147,8 @@ with bp_tab:
             from_=alt.LookupData(bp_for_map, 'county_code', ['county_code','Pharmacy County', 'Prescription Count'])
         )
     )
+
+    bp.drop(columns='Month, Year', inplace=True)
 
     # ------------
     # page layout
