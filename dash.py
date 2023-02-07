@@ -58,6 +58,7 @@ end_date = bp['Month, Year of Filled At'].max()
 # -----------------------------
 
 bp_tab, tab2 = st.tabs(['buprenorphine', 'tab2'])
+
 if 'counties' not in st.session_state:
     st.session_state['counties'] = ALL_AZ_COUNTIES
 
@@ -108,7 +109,6 @@ with bp_tab:
         alt.X('Month, Year', axis=alt.Axis(format='%Y %B', title='date')),
         alt.Y('Prescription Count', axis=alt.Axis(title='rx count')),
         color=alt.Color('Generic Name', scale=alt.Scale(scheme='accent'), legend=alt.Legend(title=' ', orient='top')), # title is space to prevent an altair bug that causes clipping
-        strokeDash='Generic Name',
         strokeWidth=alt.value(3),
         tooltip=['Generic Name', 'Month, Year', 'Prescription Count']
     ).add_selection(
