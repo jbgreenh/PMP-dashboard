@@ -104,15 +104,12 @@ with bp_tab:
     bp_for_map = bp_for_map.groupby(['Pharmacy County', 'county_code'])['Prescription Count'].sum().reset_index()
 
     # line chart with mouseover interaction
-    brush = alt.selection_single(on='mouseover', nearest=True)
     bp_line = alt.Chart(bp_for_line).mark_line().encode(
         alt.X('Month, Year', axis=alt.Axis(format='%Y %B', title='date')),
         alt.Y('Prescription Count', axis=alt.Axis(title='rx count')),
         color=alt.Color('Generic Name', scale=alt.Scale(scheme='accent'), legend=alt.Legend(title=' ', orient='top')), # title is space to prevent an altair bug that causes clipping
-        strokeWidth=alt.value(3),
+        strokeWidth=alt.value(4),
         tooltip=['Generic Name', 'Month, Year', 'Prescription Count']
-    ).add_selection(
-        brush
     )
 
     # add a line for the day the x dea requirement was removed if the selected date range includes that date
